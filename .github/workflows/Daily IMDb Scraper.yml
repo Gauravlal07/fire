@@ -1,0 +1,31 @@
+name: Daily IMDb Scraper
+
+on:
+  schedule:
+    - cron: '15 3 * * *'  # Runs daily at 3:15 AM UTC
+  workflow_dispatch:
+
+jobs:
+  scrape-imdb:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Run scraper by 24f1001619@ds.study.iitm.ac.in
+        run: |
+          uv run --with httpx,lxml,cssselect python scrape.py
+
+      - name: Commit and push data
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add *.json
+          git commit -m "Update IMDb Top 250 data [skip ci]" || exit 0
+          git push
