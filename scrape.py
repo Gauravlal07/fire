@@ -1,3 +1,3 @@
-import datetime
-print("Running IMDb Scraper")
-print("Scraped at:", datetime.datetime.now())
+import json, datetime
+with open("output.json", "w") as f:
+    json.dump({"scraped_at": datetime.datetime.now().isoformat()}, f)
