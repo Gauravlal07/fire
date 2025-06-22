@@ -26,6 +26,11 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          
+          # Add only if .json file(s) exist
           git ls-files '*.json' | xargs -r git add
+
           git commit -m "Update IMDb Top 250 data [skip ci]" || echo "No changes to commit"
-          git push --force https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+
+          # Force push to avoid "rejected push" error
+          git push --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:main
