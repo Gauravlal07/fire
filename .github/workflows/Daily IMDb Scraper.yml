@@ -9,7 +9,7 @@ jobs:
   scrape-imdb:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Required to push changes
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -20,12 +20,12 @@ jobs:
 
       - name: Run scraper by 24f1001619@ds.study.iitm.ac.in
         run: |
-          uv run --with httpx,lxml,cssselect python "${{ github.workspace }}/scrape.py"
+          uv run --with httpx,lxml,cssselect python scrape.py
 
       - name: Commit and push data
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add *.json || echo "No JSON files to add"
-          git commit -m "Update IMDb Top 250 data [skip ci]" || echo "No changes to commit"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+          git add *.json
+          git commit -m "Update IMDb Top 250 data [skip ci]" || exit 0
+          git push
